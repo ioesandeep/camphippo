@@ -1,0 +1,7 @@
+@charset "utf-8";
+
+button.big, button.small {
+	background-position:right top;
+	background-repeat:no-repeat;
+	padding:0 3px 0 0;
+}

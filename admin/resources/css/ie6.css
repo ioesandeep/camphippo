@@ -1,0 +1,40 @@
+@charset "utf-8";
+
+button.big {
+	display:inline-block;
+	border:0;
+	cursor:pointer;
+	background-color:transparent;
+	padding:0;
+	margin:0;
+	height:25px;
+}
+button.big span.left {
+	background-image:url(../images/btn-bg-left.png);
+	background-position:left top;
+	background-repeat:no-repeat;
+	height:23px;
+	display:block;
+	padding-left:4px;
+}
+button.big span.right {
+	display:block;
+	background-image:url(../images/btn-bg-right.png);
+	background-position:right;
+	background-repeat:no-repeat;
+	font-size:13px;
+	cursor:pointer;
+	height:23px;
+	padding-right:3px;
+}
+button.big span.text {
+	display:block;
+	padding-left:7px;
+	padding-right:7px;
+	color:#fff;
+	padding-top:3px !important;
+	background-image:url(../images/btn-bg.png);
+	background-position:right top;
+	background-repeat:repeat-x;
+	height:20px;
+}
