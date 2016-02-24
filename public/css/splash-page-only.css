@@ -1,0 +1,105 @@
+/*
+ * Camp Hippo
+ * Splash page stylesheet
+ *
+ */
+ 
+#splash .nav.navbar-nav, #splash .navbar-header {
+	display: none;
+}
+
+#splash .full-width-purple {
+	background-color: #632F53;
+	padding: 83px 0 10px;
+	margin-bottom: 40px;
+}
+
+#splash .full-width-purple , #splash .full-width-purple h1 {
+	color: #fff;
+}
+
+/* apply container */
+.apply-container {
+	float: left;
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.apply-container .apply-columns {
+	background-color: #0897D5;
+	float: left;
+	padding: 15px;
+	color: #fff;
+	margin-bottom: 15px;
+}
+
+.apply-columns h2 {
+	color: #fff;
+	text-align: center;
+	font-size: 41px;
+}
+
+.apply-container .apply-columns .apply-body, .apply-container .apply-columns .apply-footer {
+	float: left;
+	width: 100%;
+	padding: 15px 0;
+}
+
+.apply-container .apply-columns .apply-body {
+	min-height: 500px;
+}
+
+.apply-container .apply-columns .apply-footer {
+	text-align: center;
+}
+
+.apply-body ul.data-row {
+	float: left;
+	list-style: outside none none;
+	padding-left: 0;
+	width: 100%;
+}
+
+.apply-body ul li {
+	float: left;
+}
+
+.apply-body ul .lbl {
+	width: 20%;
+	font-weight: 700;
+	text-align: right;
+	padding: 0 10px;
+	text-transform: uppercase;
+}
+
+.apply-body ul .lbl-data {
+	width: 78%;
+	padding: 0 10px;
+}
+
+.apply-body ul .lbl-data span {
+	display: block;
+	margin-bottom: 10px;
+}
+
+@media (max-width: 1000px) {
+	.apply-container .row {
+		margin: 0;
+	}
+	
+	.apply-body ul li {
+		padding: 0 !important;
+	}
+	
+	.apply-body ul .lbl {
+		width: 100%;
+		text-align: left;
+	}
+	
+}
+
+@media (max-width: 991px) {
+	#splash .full-width-purple {
+    padding: 40px 0 10px;
+	}	
+}
