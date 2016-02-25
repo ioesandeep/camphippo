@@ -1,43 +1,38 @@
+<?php
+$data = table_fetch_rows('page', sprintf('parent_id="%d"', $pageData['id']));
+if (false == $data) {
+    return;
+}
+function numToStr($index)
+{
+    $container = array('one', 'two', 'three', 'four');
+    return isset($container[$index]) ? $container[$index] : null;
+}
 
+?>
 <div class="row menu-image-container">
-    <div class="menu-image-columns menu-one">
-        <div class="menu-image"></div>
-        <div class="menu-text">
-            <a href="#">
-                <h2>Lifeguarding</h2>
-                <p>Lifeguarding (NPLQ) courses staged at the Top Training Centre in the East Riding of Yorkshire and Humberside.</p>
-                <img src="/public/img/icons/info.png" alt="" />
-            </a>
+    <?php
+    foreach ($data as $k => $d) {
+        $cat = table_fetch_row('page', sprintf('parent_id=%d and LOWER(menu_title)="%s"', -1, $d['menu_title']));
+        if (false == $cat) {
+            continue;
+        }
+        $uri = getRewriteUrl('page', $cat['id']);
+        ?>
+
+        <div class="menu-image-columns menu-<?php _e(numToStr($k)); ?>">
+            <div class="menu-image"></div>
+            <div class="menu-text">
+                <a href="<?php _e($uri); ?>">
+                    <?php
+                    _t('h2', ucwords($d['h1_title']));
+                    _e($d['content']);
+                    ?>
+                    <img src="/public/img/icons/info.png" alt=""/>
+                </a>
+            </div>
         </div>
-    </div><!-- .menu-image-columns -->
-    <div class="menu-image-columns menu-two">
-        <div class="menu-image"></div>
-        <div class="menu-text">
-            <a href="#">
-                <h2>Kids Camps</h2>
-                <p>Kids Camps for school years 5 and 6. One or two week camps in the Summer, with great facilitiesand set in a lovely environment</p>
-                <img src="/public/img/icons/info.png" alt="" />
-            </a>
-        </div>
-    </div><!-- .menu-image-columns -->
-    <div class="menu-image-columns menu-three">
-        <div class="menu-image"></div>
-        <div class="menu-text">
-            <a href="#">
-                <h2>Triathlons</h2>
-                <p>Both adult and children’s triathlons staged in and around Pocklington. A pool swim with excellent changing and marshalling facilities.</p>
-                <img src="/public/img/icons/info.png" alt="" />
-            </a>
-        </div>
-    </div><!-- .menu-image-columns -->
-    <div class="menu-image-columns menu-four">
-        <div class="menu-image"></div>
-        <div class="menu-text">
-            <a href="#">
-                <h2>Trampolining</h2>
-                <p>A thriving trampolining club that excepts children of all abilities, between 5-18. Excellent coaching in a relaxed and friendly group. Tuesdays and fridays</p>
-                <img src="/public/img/icons/info.png" alt="" />
-            </a>
-        </div>
-    </div><!-- .menu-image-columns -->
+        <?php
+    }
+    ?>
 </div>

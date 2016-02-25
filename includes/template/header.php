@@ -16,14 +16,14 @@ require_once dirname(__FILE__) . '/menu.php';
             </li>
             <li>
                 <div class="contact-phone">
-                    <a href="tel: 07815 681 979"><span>Jan:</span><?php echo Site::jan_phone(); ?></a>
-                    <a href="tel: 07718 202 510"><span>Gary:</span><?php echo Site::gary_phone(); ?></a>
+                    <a href="tel: <?php echo Site::jan_phone(); ?>"><span>Jan:</span><?php echo Site::jan_phone(); ?></a>
+                    <a href="tel: <?php echo Site::gary_phone(); ?>"><span>Gary:</span><?php echo Site::gary_phone(); ?></a>
                 </div><!-- contact-phone -->
             </li>
             <li>
                 <div class="social mobile-social-header" style="display: none;">
-                    <a href="/" class="ico facebook"></a>
-                    <a href="/" class="ico twitter"></a>
+                    <a href="<?php echo Site::facebook(); ?>" class="ico facebook"></a>
+                    <a href="<?php echo Site::twitter(); ?>" class="ico twitter"></a>
                 </div><!-- social -->
             </li>
         </ul><!-- header-contact -->

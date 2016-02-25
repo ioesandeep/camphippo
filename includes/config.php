@@ -71,10 +71,10 @@ function __($tag, $id = false, $class = false, $attrs = array())
 {
     $out = sprintf('<%s', strtolower($tag));
     if (!empty($attrs)) {
-        if (isset($attrs['class']) && false == $class) {
+        if (isset($attrs['class']) && false != $class) {
             unset($attrs['class']);
         }
-        if (isset($attrs['id']) && false == $id) {
+        if (isset($attrs['id']) && false != $id) {
             unset($attrs['id']);
         }
         foreach ($attrs as $key => $val) {
@@ -92,5 +92,11 @@ function __($tag, $id = false, $class = false, $attrs = array())
     }
     $out .= '>';
 
-    _e($out);
+    return _e($out);
+}
+
+
+function _t($tag, $content, $attrs = array())
+{
+    return __($tag, false, false, $attrs) . _e($content) . __('/' . $tag);
 }

@@ -55,6 +55,57 @@
                 ),
         ),
         array(
+            'module' => 'slider',
+            'title' => 'Slider',
+            'submenu' =>
+                array(
+                    0 =>
+                        array(
+                            'action' => 'form',
+                            'title' => 'Add',
+                        ),
+                    1 =>
+                        array(
+                            'action' => 'list',
+                            'title' => 'Overview',
+                        ),
+                ),
+        ),
+        array(
+            'module' => 'events',
+            'title' => 'Events',
+            'submenu' =>
+                array(
+                    0 =>
+                        array(
+                            'action' => 'form',
+                            'title' => 'Add',
+                        ),
+                    1 =>
+                        array(
+                            'action' => 'list',
+                            'title' => 'Overview',
+                        ),
+                ),
+        ),
+        array(
+            'module' => 'camps',
+            'title' => 'Camps',
+            'submenu' =>
+                array(
+                    0 =>
+                        array(
+                            'action' => 'form',
+                            'title' => 'Add',
+                        ),
+                    1 =>
+                        array(
+                            'action' => 'list',
+                            'title' => 'Overview',
+                        ),
+                ),
+        ),
+        array(
             'module' => 'site',
             'title' => 'Site data',
             'submenu' =>

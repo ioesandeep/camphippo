@@ -3,41 +3,44 @@
         <img src="/public/img/footer-logo.png" class="footer-bottom-logo"/>
         <ul class="phone-footer ul-col-footer">
             <li class="ul-col-title">
-                Phone:
+                <?php _e(Lang::phone()); ?>
             </li>
             <li>
-                Jan: <a href="tel: <?php echo Site::jan_phone(); ?>"><?php echo Site::jan_phone(); ?></a>
+                <?php _e(Lang::jan()); ?> <a
+                    href="tel: <?php _e(Site::jan_phone()); ?>"><?php _e(Site::jan_phone()); ?></a>
             </li>
             <li>
-                Gary: <a href="tel: <?php echo Site::gary_phone(); ?>"><?php echo Site::gary_phone(); ?></a>
+                <?php _e(Lang::gary()); ?> <a
+                    href="tel: <?php _e(Site::gary_phone()); ?>"><?php _e(Site::gary_phone()); ?></a>
             </li>
         </ul><!-- ul-col-footer -->
-        <ul class="email-footer ul-col-footer">
-            <li class="ul-col-title">
-                Email:
-            </li>
-            <li>
-                <?php echo Site::jan_email(); ?>
-            </li>
-            <li>
-                <?php echo Site::gary_email(); ?>
-            </li>
-        </ul><!-- ul-col-footer -->
-        <ul class="address-footer ul-col-footer">
-            <li class="ul-col-title">
-                Address:
-            </li>
-            <li>
-                <?php echo Site::address(); ?>
-            </li>
-        </ul><!-- ul-col-footer -->
-        <ul class="social-footer ul-col-footer">
-            <li>
-                <a href="<?php echo Site::facebook(); ?>" class="facebook ico"></a>
-            </li>
-            <li>
-                <a href="<?php echo Site::twitter(); ?>" class="twitter ico"></a>
-            </li>
-        </ul><!-- ul-col-footer -->
+        <?php
+
+        //email column
+        __('ul', false, 'email-footer ul-col-footer');
+        _t('li', Lang::email(), array('class' => 'ul-col-title'));
+        _t('li', Site::jan_email());
+        _t('li', Site::gary_email());
+        __('/ul');
+
+        //address column
+        __('ul', false, 'address-footer ul-col-footer');
+        _t('li', Lang::address(), array('class' => 'ul-col-title'));
+        _t('li', Site::address());
+        __('/ul');
+
+        //social icons column
+        __('ul', false, 'social-footer ul-col-footer');
+
+        __('li');
+        _t('a', null, array('href' => Site::facebook(), 'class' => 'facebook ico'));
+        __('/li');
+
+        __('li');
+        _t('a', null, array('href' => Site::twitter(), 'class' => 'twitter ico'));
+        __('/li');
+
+        __('/ul');
+        ?>
     </div>
 </div><!-- footer-inner -->
