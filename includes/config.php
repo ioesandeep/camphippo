@@ -4,7 +4,8 @@ ini_set('display_errors', '1');
 //error_reporting(0);
 date_default_timezone_set('Europe/London');
 require_once("admin/application.php");
-
+define('LAYOUT_PATH',dirname(__FILE__).'/layout');
+define('TEMPLATE_PATH',dirname(__FILE__).'/template');
 function get_paragraphed_content($content, $paragraph_number = 0)
 {
     if ($paragraph_number == 0) {
@@ -90,6 +91,10 @@ function __($tag, $id = false, $class = false, $attrs = array())
     if ($id != false) {
         $out .= sprintf(' id="%s"', $id);
     }
+    if (in_array($tag, array('img','input','br'))) {
+        $out .= '/';
+    }
+
     $out .= '>';
 
     return _e($out);

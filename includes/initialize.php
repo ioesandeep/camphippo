@@ -32,4 +32,6 @@ if ($rewriteData !== false && $rewriteData['table_name'] == 'page') {
         $pageData = $data;
         $pageData['h1_title'] = $data['title'];
     }
+} else {
+    $pageData = table_fetch_row($rewriteData['table_name'], sprintf('id="%d"', $rewriteData['table_id']));
 }

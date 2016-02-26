@@ -8,5 +8,15 @@ return array(
     'email' => 'Email:',
     'address' => 'Address:',
     'jan' => 'Jan:',
-    'gary' => 'Gary:'
+    'gary' => 'Gary:',
+    'e' => 'E:',
+    't' => 'T:',
+    'find_more' => 'find out more',
+    'month_dates' => 'This month dates',
+    'date'  => 'Date:',
+    'venue' => 'Venue:',
+    'time' => 'Time:',
+    'view_details' => 'View all details',
+    'sign_up'   => 'Sign up to course',
+    'back_list' => 'Back to full list'
 );

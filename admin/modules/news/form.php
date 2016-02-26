@@ -65,14 +65,14 @@ if (!empty($table_id)) {
                 if (!empty($data)) {
                     $image = get_image('news/' . $data['id']);
                     if (!empty($image)) {
-                        echo sprintf('<img src="%s" style="max-width: 250px;"/>', $image);
+                        echo sprintf('<p><img src="%s" style="max-width: 250px;"/></p>', $image);
                     }
                 }
                 ?>
             </td>
         </tr>
         <tr>
-            <td>Content:</td>
+            <td valign="top">Content:</td>
             <td><?php show_fckeditor('content', isset($data['content']) ? $data['content'] : ''); ?></td>
         </tr>
         <tr>

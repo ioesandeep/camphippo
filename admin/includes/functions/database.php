@@ -30,6 +30,7 @@ function table_fetch_row($table, $where, $order_by = '')
 	}
 	
 	$sql .= ' LIMIT 0,1';
+
 	$r = mysql_query($sql, $db) or die(mysql_error($db));
 	
 	if (mysql_num_rows($r) == 0) {
@@ -56,7 +57,7 @@ function table_fetch_rows($table, $where = '', $order_by = '', $limit_from = 0, 
 	if ($limit_from > 0 || $limit_to > 0) {
 		$sql .= sprintf(' LIMIT %d, %d', $limit_from, $limit_to);
 	}
-	
+
 	$r = mysql_query($sql, $db) or die(mysql_error($db));
 	$rows = array();
 	
