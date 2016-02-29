@@ -1,11 +1,14 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
-//error_reporting(0);
 date_default_timezone_set('Europe/London');
 require_once("admin/application.php");
+
 define('LAYOUT_PATH', dirname(__FILE__) . '/layout');
 define('TEMPLATE_PATH', dirname(__FILE__) . '/template');
+define('ENV', 'production');
+
+
 function get_paragraphed_content($content, $paragraph_number = 0, $skip = false)
 {
     if ($paragraph_number == 0) {
@@ -79,7 +82,7 @@ function _e($data, $decode = true)
  */
 function __($tag, $id = false, $class = false, $attrs = array())
 {
-    $out = sprintf('<%s', strtolower($tag));
+    $out = sprintf('<%s ', strtolower($tag));
     if (!empty($attrs)) {
         if (isset($attrs['class']) && false != $class) {
             unset($attrs['class']);
@@ -103,7 +106,7 @@ function __($tag, $id = false, $class = false, $attrs = array())
     if (in_array($tag, array('img', 'input', 'br'))) {
         $out .= '/';
     }
-
+    $out = rtrim($out,' ');
     $out .= '>';
 
     return _e($out);

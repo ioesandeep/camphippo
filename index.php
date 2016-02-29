@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/includes/initialize.php';
 require_once dirname(__FILE__) . '/includes/layout/normal.php';
-
+ob_start();
 doctype('html5');
 
 __('html');
@@ -30,3 +30,8 @@ __('body');
     require_once dirname(__FILE__) . '/includes/template/scripts.php';
 __('/body');
 __('/html');
+$response = ob_get_contents();
+ob_end_clean();
+
+//minify the output
+echo ENV == 'production' ? preg_replace( array('/ {2,}/','/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s'),array(' ',''),$response) : $response;

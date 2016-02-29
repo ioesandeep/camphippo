@@ -6,12 +6,12 @@
                 <?php _e(Lang::phone()); ?>
             </li>
             <li>
-                <?php _e(Lang::jan()); ?> <a
-                    href="tel: <?php _e(Site::jan_phone()); ?>"><?php _e(Site::jan_phone()); ?></a>
+                <?php _e(Lang::jan()); ?>
+                <a href="tel: <?php _e(Site::jan_phone()); ?>"><?php _e(Site::jan_phone()); ?></a>
             </li>
             <li>
-                <?php _e(Lang::gary()); ?> <a
-                    href="tel: <?php _e(Site::gary_phone()); ?>"><?php _e(Site::gary_phone()); ?></a>
+                <?php _e(Lang::gary()); ?>
+                <a href="tel: <?php _e(Site::gary_phone()); ?>"><?php _e(Site::gary_phone()); ?></a>
             </li>
         </ul><!-- ul-col-footer -->
         <?php
