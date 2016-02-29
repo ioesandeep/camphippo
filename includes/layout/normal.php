@@ -1,10 +1,17 @@
 <?php
+/***
+ * Routing page
+ */
+$banner = false;
+
+//Route by url
 switch ($url) {
     case '/home.html':
         $include = 'home';
         break;
     case '/about-us.html':
         $include = 'about';
+        $banner = true;
         break;
     case '/contact.html':
         $include = 'contact';
@@ -13,6 +20,7 @@ switch ($url) {
     case '/kids-camps.html':
     case '/triathlons.html':
     case '/trampolining.html':
+        $banner = true;
         $include = 'camps';
         break;
     case '/events.html':
@@ -22,10 +30,14 @@ switch ($url) {
         $include = 'news';
         break;
     default:
+        $banner = true;
         $include = 'details';
 }
+
+//Route by table name
 switch ($rewriteData['table_name']) {
     case 'camps':
+        $banner = true;
         $include = 'camp-details';
         break;
     case 'events':

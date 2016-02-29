@@ -13,10 +13,19 @@ return array(
     't' => 'T:',
     'find_more' => 'find out more',
     'month_dates' => 'This month dates',
-    'date'  => 'Date:',
+    'date' => 'Date:',
     'venue' => 'Venue:',
     'time' => 'Time:',
     'view_details' => 'View all details',
-    'sign_up'   => 'Sign up to course',
-    'back_list' => 'Back to full list'
+    'sign_up' => 'Sign up to course',
+    'back_list' => 'Back to full list',
+    'back_to_news' => '&lt; Back to Latest Blog articles',
+    'prev' => '&lt; Previous',
+    'next' => 'Next &gt;',
+    'submit' => 'Submit',
+    'thank_subscribe' => 'Thank you for subscribing.',
+    'subscribe' => 'Subscribe',
+    's_name' => 'Your name',
+    's_email' => 'Your email',
+    'popular_posts' => 'Popular posts'
 );

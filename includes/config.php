@@ -4,9 +4,9 @@ ini_set('display_errors', '1');
 //error_reporting(0);
 date_default_timezone_set('Europe/London');
 require_once("admin/application.php");
-define('LAYOUT_PATH',dirname(__FILE__).'/layout');
-define('TEMPLATE_PATH',dirname(__FILE__).'/template');
-function get_paragraphed_content($content, $paragraph_number = 0)
+define('LAYOUT_PATH', dirname(__FILE__) . '/layout');
+define('TEMPLATE_PATH', dirname(__FILE__) . '/template');
+function get_paragraphed_content($content, $paragraph_number = 0, $skip = false)
 {
     if ($paragraph_number == 0) {
         return $content;
@@ -18,6 +18,15 @@ function get_paragraphed_content($content, $paragraph_number = 0)
         $paragraphs = explode('\n', $content);
     } elseif (strpos($content, '<br/>')) {
         $paragraphs = explode('<br/>', $content);
+    }
+
+    if ($skip == true) {
+        //skip certain paragraphs
+        if (isset($paragraphs[$paragraph_number - 1])) {
+            unset($paragraphs[$paragraph_number - 1]);
+            $paragraphs = array_values($paragraphs);
+        }
+        return sprintf('<p>%s</p>', implode('</p><p>', $paragraphs));
     }
 
     if (!isset($paragraphs[$paragraph_number - 1])) {
@@ -91,7 +100,7 @@ function __($tag, $id = false, $class = false, $attrs = array())
     if ($id != false) {
         $out .= sprintf(' id="%s"', $id);
     }
-    if (in_array($tag, array('img','input','br'))) {
+    if (in_array($tag, array('img', 'input', 'br'))) {
         $out .= '/';
     }
 

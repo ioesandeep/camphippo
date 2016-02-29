@@ -13,3 +13,11 @@
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,300,600,700' rel='stylesheet' type='text/css'/>
 <link href='https://fonts.googleapis.com/css?family=Cabin:400,700' rel='stylesheet' type='text/css'>
 <!-- End Google Fonts -->
+<style type="text/css">
+    .banner-image{
+        width: 100%;
+        padding: 0 30px;
+        height: 270px;
+        overflow: hidden
+    }
+</style>

@@ -16,6 +16,8 @@ __('body');
         __('section','main2');
             if($url == '/home.html'){
                 require_once dirname(__FILE__) . '/includes/template/topbanner.php';
+            } elseif($banner == true){
+                require_once dirname(__FILE__) . '/includes/template/page-banner.php';
             }
             __('div',false,'container');
                 require_once dirname(__FILE__) . '/includes/layout/pages/'.$include.'.php';

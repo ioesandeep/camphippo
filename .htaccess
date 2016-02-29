@@ -1,2 +1,5 @@
 RewriteEngine On
-RewriteRule	(.*)\.html		/index.php?url=/$1.html&%{QUERY_STRING} [L]
+RewriteCond		%{REQUEST_URI}					!docs
+RewriteCond		%{REQUEST_URI}					!designs
+RewriteCond		%{REQUEST_URI}					!admin
+RewriteRule		^(.*)\.html$					index.php?url=/$1.html&%{QUERY_STRING} [L]

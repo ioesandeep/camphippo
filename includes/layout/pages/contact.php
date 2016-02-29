@@ -1,3 +1,8 @@
+<?php
+if (isset($_POST['contact'])) {
+
+}
+?>
 <div class="row">
     <div id="default-content-container">
         <div class="col-md-9 col-sm-9 col-xs-12">
@@ -19,7 +24,7 @@
                 <input type="text" id="" name="" placeholder="EMAIL" class="form-control"/>
                 <input type="text" id="" name="" placeholder="CONTACT NUMBER" class="form-control"/>
                 <textarea id="" name="" placeholder="MESSAGE" class="form-control"></textarea>
-                <button type="button" class="red-btn">submit</button>
+                <button type="submit" class="red-btn" name="contact"><?php _e(Lang::submit()); ?></button>
             </form><!-- contactForm -->
         </div>
         <div class="right-side-content col-md-3 col-sm-3 col-xs-12">

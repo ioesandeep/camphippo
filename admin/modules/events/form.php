@@ -2,6 +2,14 @@
 $id = get_id();
 if (!empty($_POST)) {
     $fields = array('title', 'venue', 'start_date', 'start_time', 'end_date', 'end_time', 'description');
+
+    list($d,$m,$y) = explode('/',$_POST['start_date']);
+    $_POST['start_date'] = sprintf('%d-%d-%d',$y,$m,$d);
+
+    list($d,$m,$y) = explode('/',$_POST['end_date']);
+    $_POST['end_date'] = sprintf('%d-%d-%d',$y,$m,$d);
+
+
     if ($id > 0) {
         table_update('events', $fields, $_POST, sprintf('id="%d"', $id));
     } else {
@@ -37,7 +45,7 @@ $data = table_fetch_row('events', sprintf('id="%d"', $id));
             <td>Start date</td>
             <td>
                 <input type="text" class="datepicker" name="start_date" placeholder="Event start date"
-                       value="<?php echo isset($data['start_date']) ? $data['start_date'] : null; ?>"/>
+                       value="<?php echo isset($data['start_date']) ? date('d/m/Y',strtotime($data['start_date'])) : null; ?>"/>
             </td>
         </tr>
         <tr>
@@ -51,7 +59,7 @@ $data = table_fetch_row('events', sprintf('id="%d"', $id));
             <td>End date</td>
             <td>
                 <input type="text" class="datepicker" name="end_date" placeholder="Event end date"
-                       value="<?php echo isset($data['end_date']) ? $data['end_date'] : null; ?>"/>
+                       value="<?php echo isset($data['end_date']) ? date('d/m/Y',strtotime($data['end_date'])) : null; ?>"/>
             </td>
         </tr>
         <tr>
@@ -90,14 +98,14 @@ $data = table_fetch_row('events', sprintf('id="%d"', $id));
 
 <script type="text/javascript">
     $(function () {
-        $('#title').keyup(function () {
+        $('[name=title]').live('keyup change input focusout',function () {
             var val = $(this).val();
             val = val.toLowerCase();
             val = val.replace(/[^a-z0-9 ]+/g, '');
             val = val.replace('  ', ' ');
-            var url = '/event-' + val.replace(/\s/g, '-') + '.html';
+            var url = '/camp-' + val.replace(/\s/g, '-') + '.html';
             $('#url').val(url);
         });
-        $('#title').trigger('keyup');
+        $('[name=title]').trigger('keyup');
     });
 </script>

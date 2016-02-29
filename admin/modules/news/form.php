@@ -25,8 +25,8 @@ if (isset($_POST['save'])) {
     saveRewrite('news', $table_id, '', $_POST['url']);
 }
 
-if (!empty($table_id)) {
-    $data = table_fetch_row('news', 'id=' . $table_id);
+if (false != $table_id && $table_id > 0) {
+    $data = table_fetch_row('news', sprintf('id="%d"', $table_id));
     if ($data !== false) {
         $data['url'] = getRewriteUrl('news', $data['id']);
         $date = explode('-', $data['news_date']);
@@ -110,7 +110,7 @@ if (!empty($table_id)) {
 </form>
 <script type="text/javascript">
     $(function () {
-        $('#title').keyup(function () {
+        $('#title').live('keyup change input focusout',function () {
             var val = $('#title').val();
 
             val = val.toLowerCase();
@@ -121,5 +121,6 @@ if (!empty($table_id)) {
 
             $('#url').val(url);
         });
+        $('#title').trigger('keyup');
     });
 </script>
