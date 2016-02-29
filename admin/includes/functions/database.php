@@ -126,7 +126,7 @@ function format_field($table_fields, $field, $values)
 	if ((strpos($type, 'int') !== false) || (strpos($type, 'float') !== false) || (strpos($type, 'decimal') !== false) || (strpos($type, 'double') !== false)) {
 		return $values[$field];
 	} else {
-		return '"' . mysql_escape_string($values[$field]) . '"';
+		return '"' . mysql_real_escape_string($values[$field]) . '"';
 	}
 }
 
@@ -138,7 +138,7 @@ function table_insert($table, $fields, $values)
 	
 	$value_params = array();
 	foreach ($fields as $field) {
-			$value_params[] = '"' . mysql_escape_string($values[$field]) . '"'; //format_field($table_fields, $field, $values);
+			$value_params[] = '"' . mysql_real_escape_string($values[$field]) . '"'; //format_field($table_fields, $field, $values);
 	}
 	
 	$sql = sprintf('INSERT INTO %s (%s) VALUES (%s)', $table, implode(', ', $fields), implode(', ', $value_params));
@@ -155,7 +155,7 @@ function table_update($table, $fields, $values, $where)
 	$params = array();
 	foreach ($fields as $field) {
 		//$params[] = sprintf('%s = %s', $field, format_field($table_fields, $field, $values));
-		$params[] = sprintf('%s = "%s"', $field, mysql_escape_string($values[$field]));
+		$params[] = sprintf('%s = "%s"', $field, mysql_real_escape_string($values[$field]));
 	}
 	
 	$sql = sprintf('UPDATE %s SET %s WHERE %s', $table, implode(', ', $params), $where);

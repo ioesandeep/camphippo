@@ -20,6 +20,10 @@ $pageData['javascript'] = '';
 
 $parenturl = '';
 
+if ((bool)$rewriteData['table_id'] == false) {
+    return;
+}
+
 if ($rewriteData !== false && $rewriteData['table_name'] == 'page') {
     $data = table_fetch_row('page', 'status = 1 AND id = ' . $rewriteData['table_id']);
     if ($data !== false) {

@@ -20,8 +20,9 @@ $type = table_fetch_row('page', sprintf('LOWER(page_title)="%s"', strtolower($ty
                 if (empty($image)) {
                     $image = '/public/img/hippo/life-guard-hippo.png';
                 }
+                $signup_url = sprintf('/signup.html?camp=%d',$pageData['id']);//empty($pageData['signup_url']) ? '/signup.html' : $pageData['signup_url'];
                 _e($pageData['description']);
-                __('a', 'signup-course', 'text-icon-block', array('href' => $pageData['signup_url']));
+                __('a', 'signup-course', 'text-icon-block', array('href' => $signup_url));
                 _t('span', Lang::sign_up());
                 __('img', false, false, array('src' => $image));
                 __('/a');
@@ -35,7 +36,7 @@ $type = table_fetch_row('page', sprintf('LOWER(page_title)="%s"', strtolower($ty
             </div><!-- #video-container -->
             <a href="#" id="download-course" class="text-icon-block">
                 <span>download course information</span>
-                <img src="img/icons/download.png" alt=""/>
+                <img src="/public/img/icons/download.png" alt=""/>
             </a>
         </div>
     </div><!-- #lifeguard-container -->

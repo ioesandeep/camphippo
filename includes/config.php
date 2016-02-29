@@ -106,13 +106,19 @@ function __($tag, $id = false, $class = false, $attrs = array())
     if (in_array($tag, array('img', 'input', 'br'))) {
         $out .= '/';
     }
-    $out = rtrim($out,' ');
+    $out = rtrim($out, ' ');
     $out .= '>';
 
     return _e($out);
 }
 
-
+/**
+ * Output a tab with content inside it
+ * @param $tag
+ * @param $content
+ * @param array $attrs
+ * @return string
+ */
 function _t($tag, $content, $attrs = array())
 {
     return __($tag, false, false, $attrs) . _e($content) . __('/' . $tag);

@@ -29,6 +29,12 @@ switch ($url) {
     case '/news.html':
         $include = 'news';
         break;
+    case '/signup.html':
+        $include = 'signup';
+        break;
+    case '/payment.html':
+        $include = 'payment';
+        break;
     default:
         $banner = true;
         $include = 'details';

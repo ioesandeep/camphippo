@@ -1,7 +1,7 @@
 <?php
 $id = get_id();
 if (!empty($_POST)) {
-    $fields = array('title','type', 'venue', 'start_date', 'start_time', 'end_date', 'end_time', 'description', 'signup_url', 'video_url');
+    $fields = array('title','type', 'venue', 'start_date', 'start_time', 'end_date', 'end_time', 'description', 'price', 'video_url');
 
     list($d,$m,$y) = explode('/',$_POST['start_date']);
     $_POST['start_date'] = sprintf('%d-%d-%d',$y,$m,$d);
@@ -91,10 +91,10 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
             </td>
         </tr>
         <tr>
-            <td>Signup URL</td>
+            <td>Event price</td>
             <td>
-                <input type="text" name="signup_url" placeholder="Camp signup url"
-                       value="<?php echo isset($data['signup_url']) ? $data['signup_url'] : null; ?>"/>
+                <input type="text" name="price" placeholder="Camp signup url"
+                       value="<?php echo isset($data['price']) ? $data['price'] : null; ?>"/>
             </td>
         </tr>
         <tr>
