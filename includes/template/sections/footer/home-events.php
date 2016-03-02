@@ -4,7 +4,7 @@ $news = table_fetch_row('page', 'LOWER(page_title)="news"');
 //latest news, the last one in the db
 $l_news = table_fetch_row('news', 'status=1', 'news_date desc, id desc');
 //this years events
-$events = table_fetch_rows('events', sprintf('date_format(str_to_date(start_date,"%%Y"),"%%Y") = "%d"', date('Y')), 'end_date desc, id desc', 0, 4);
+$events = table_fetch_rows('camps', sprintf('date_format(str_to_date(start_date,"%%Y"),"%%Y") = "%d"', date('Y')), 'str_to_date(start_date,"%Y-%m-%d") asc, id desc', 0, 4);
 ?>
 <div class="footer-content">
     <div class="container">
@@ -14,8 +14,8 @@ $events = table_fetch_rows('events', sprintf('date_format(str_to_date(start_date
                     <div class="events-container">
                         <?php
                         _t('h1', $event['h1_title']);
-                        _e($event['content']);
-                        _t('a', Lang::more_info(), array('href' => getRewriteUrl('page', $event['id'])));
+                        //_e($event['content']);
+                        //_t('a', Lang::more_info(), array('href' => getRewriteUrl('page', $event['id'])));
                         __('div', false, 'calendar-module-container');
                         _t('h2', Lang::year_events());
                         if (false != $events) {
@@ -30,13 +30,15 @@ $events = table_fetch_rows('events', sprintf('date_format(str_to_date(start_date
                                 }
                                 __('div', false, 'cal-module-row');
                                     __('div', false, 'cal-module-left');
-                                        _t('span', strtoupper(date('M')), array('class' => 'month'));
+                                        _t('span', strtoupper(date('M',strtotime($e['start_date']))), array('class' => 'month'));
                                         _t('span', $day, array('class' => 'day'));
                                     __('/div');
                                     __('div', false, 'cal-module-mid');
                                         _t('span', $e['title'], array('class' => 'title'));
                                         _t('span', Lang::venue() . ' ' . $e['venue']);
-                                        _t('span', Lang::time() . ' ' . $e['start_time']);
+                                        if(!empty($e['start_time'])) {
+                                            _t('span', Lang::time() . ' ' . $e['start_time']);
+                                        }
                                     __('/div');
                                 __('/div');
                             }

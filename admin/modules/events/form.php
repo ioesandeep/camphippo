@@ -103,7 +103,7 @@ $data = table_fetch_row('events', sprintf('id="%d"', $id));
             val = val.toLowerCase();
             val = val.replace(/[^a-z0-9 ]+/g, '');
             val = val.replace('  ', ' ');
-            var url = '/camp-' + val.replace(/\s/g, '-') + '.html';
+            var url = '/event-' + val.replace(/\s/g, '-') + '.html';
             $('#url').val(url);
         });
         $('[name=title]').trigger('keyup');

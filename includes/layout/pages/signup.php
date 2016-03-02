@@ -8,8 +8,7 @@ if (isset($_POST['signup'])) {
     try {
         $post = $_POST;
         $required = Lang::signup_form();
-        echo '<pre>';
-        print_r($required);
+
         if (!isset($post['name'])) {
             throw new Exception($required['name']);
         }
@@ -31,8 +30,7 @@ if (isset($_POST['signup'])) {
         if (!isset($post['year_group'])) {
             throw new Exception($required['year_group']);
         }
-        $post['camp'] = $_GET['camp'];
-        if (!table_insert('camp_registration', array('name', 'email', 'mobile', 'landline', 'address', 'school', 'year_group', 'camp'), $post)) {
+        if (!table_insert('camp_registration', array('name','wished_name', 'email', 'mobile', 'landline', 'address', 'school', 'year_group', 'camp'), $post)) {
             throw new Exception(Lang::save_error());
         }
         $_SESSION['message'] = Lang::reg_success();
@@ -48,7 +46,8 @@ if (isset($_POST['signup'])) {
         _t('h1', $pageData['h1_title']);
         _e($pageData['content']);
         ?>
-        <form id="" name="" class="contactForm" method="post">
+        <form action="" class="contactForm" method="post">
+            <input type="hidden" name="camp" value="<?php _e($_GET['camp']); ?>"/>
             <input type="text" id="" name="name" placeholder="<?php _e(strtoupper(Lang::c_name())); ?>"
                    class="form-control"/>
             <input type="text" id="" name="wished_name" placeholder="<?php _e(strtoupper(Lang::c_wished_name())); ?>"

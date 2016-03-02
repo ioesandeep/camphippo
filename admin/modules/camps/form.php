@@ -1,13 +1,14 @@
 <?php
 $id = get_id();
+$messages = array();
 if (!empty($_POST)) {
-    $fields = array('title','type', 'venue', 'start_date', 'start_time', 'end_date', 'end_time', 'description', 'price', 'video_url');
+    $fields = array('title', 'type', 'venue', 'start_date', 'start_time', 'end_date', 'end_time', 'description', 'price', 'video_url');
 
-    list($d,$m,$y) = explode('/',$_POST['start_date']);
-    $_POST['start_date'] = sprintf('%d-%d-%d',$y,$m,$d);
+    @list($d, $m, $y) = explode('/', $_POST['start_date']);
+    $_POST['start_date'] = date('Y-m-d',strtotime(sprintf('%d-%d-%d', $y, $m, $d)));
 
-    list($d,$m,$y) = explode('/',$_POST['end_date']);
-    $_POST['end_date'] = sprintf('%d-%d-%d',$y,$m,$d);
+    @list($d, $m, $y) = explode('/', $_POST['end_date']);
+    $_POST['end_date'] = date('Y-m-d',strtotime(sprintf('%d-%d-%d', $y, $m, $d)));
 
     if ($id > 0) {
         table_update('camps', $fields, $_POST, sprintf('id="%d"', $id));
@@ -21,11 +22,30 @@ if (!empty($_POST)) {
     if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
         upload_file($_FILES['file'], $id, 'files');
     }
-    saveRewrite('camps', $id, '', $_POST['url']);
+    if (isset($_FILES['video']) && $_FILES['video']['error'] == 0) {
+        $ext = pathinfo($_FILES['video']['name'], PATHINFO_EXTENSION);
+        if ($ext != 'mp4') {
+            $messages[] = 'Only mp4 video files are supported.';
+        }
+        upload_file($_FILES['video'], $id, 'videos');
+    }
+    if (isset($_POST['delete'])) {
+        foreach ($_POST['delete'] as $file) {
+            if (file_exists('../' . $file)) {
+                unlink('../' . $file);
+            }
+        }
+    }
+
+    if ($id > 0) {
+        $messages[] = 'Camp event saved.';
+        saveRewrite('camps', $id, '', $_POST['url']);
+    }
+    show_messages($messages);
 }
 $data = table_fetch_row('camps', sprintf('id="%d"', $id));
 ?>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     <input type="hidden" name="url" value="" id="url"/>
     <table>
         <tbody>
@@ -44,6 +64,12 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
                     </option>
                     <option value="4" <?php echo isset($data['type']) && $data['type'] == 4 ? 'selected' : null; ?>>
                         Trampolining
+                    </option>
+                    <option value="5" <?php echo isset($data['type']) && $data['type'] == 5 ? 'selected' : null; ?>>
+                        Swim School
+                    </option>
+                    <option value="6" <?php echo isset($data['type']) && $data['type'] == 6 ? 'selected' : null; ?>>
+                        Cheerleadiing
                     </option>
                 </select>
             </td>
@@ -66,7 +92,7 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
             <td>Start date</td>
             <td>
                 <input type="text" class="datepicker" name="start_date" placeholder="Camp start date"
-                       value="<?php echo isset($data['start_date']) ? date('d/m/Y',strtotime($data['start_date'])) : null; ?>"/>
+                       value="<?php echo isset($data['start_date']) ? date('d/m/Y', strtotime($data['start_date'])) : null; ?>"/>
             </td>
         </tr>
         <tr>
@@ -80,7 +106,7 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
             <td>End date</td>
             <td>
                 <input type="text" class="datepicker" name="end_date" placeholder="Camp end date"
-                       value="<?php echo isset($data['end_date']) ? date('d/m/Y',strtotime($data['end_date'])) : null; ?>"/>
+                       value="<?php echo isset($data['end_date']) ? date('d/m/Y', strtotime($data['end_date'])) : null; ?>"/>
             </td>
         </tr>
         <tr>
@@ -100,8 +126,28 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
         <tr>
             <td>Video URL</td>
             <td>
-                <input type="text" name="video_url" placeholder="Camp video url"
-                       value="<?php echo isset($data['video_url']) ? $data['video_url'] : null; ?>"/>
+                <input type="text" name="video_url" placeholder="Camp video url" value="<?php echo isset($data['video_url']) ? htmlentities($data['video_url']) : null; ?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                or, Upload video<br/>
+                <small>Only mp4 files are supported.</small>
+            </td>
+            <td>
+                <input type="file" name="video"/>
+                <?php
+                $video = get_file($id, 'videos');
+                if (!empty($video)) {
+                    ?>
+                    <video width="320" height="240" controls>
+                        <source src="/uploads/<?php echo $video; ?>" type="video/mp4">
+                        Your browser does not support the videos.
+                    </video>
+                    <input type="checkbox" name="delete[]" value="/uploads/<?php echo $video; ?>"/>
+                    <?php
+                }
+                ?>
             </td>
         </tr>
         <tr>
@@ -111,7 +157,8 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
                 <?php
                 $file = get_file($id, 'files');
                 if (!empty($file)) {
-                    echo $file;
+                    echo '<p>' . $file . '</p>';
+                    echo sprintf('<input type="checkbox" name="delete[]" value="/uploads/%s">', $file);
                 }
                 ?>
             </td>
@@ -124,6 +171,7 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
                 $image = get_image('events/' . $id);
                 if (!empty($image)) {
                     echo sprintf('<p><img src="%s" style="max-width:250px;"/></p>', $image);
+                    echo sprintf('<input type="checkbox" name="delete[]" value="%s">', $image);
                 }
                 ?>
             </td>
@@ -146,7 +194,16 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
 
 <script type="text/javascript">
     $(function () {
-        $('[name=title]').live('keyup change input focusout',function () {
+        $('[name=video]').live("change",function(e){
+            var file = ($(this)[0]).files[0];
+            var ext = file.type.length ? file.type.split('/').slice(1)[0].toLowerCase() : file.name.split('.').slice(-1)[0];
+            if(ext != 'mp4'){
+                alert('Video selected is not a mp4 file. Only mp4 files are supported.');
+                $(this).val('');
+            }
+        });
+
+        $('[name=title]').live('keyup change input focusout', function () {
             var val = $(this).val();
             val = val.toLowerCase();
             val = val.replace(/[^a-z0-9 ]+/g, '');
@@ -154,6 +211,7 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
             var url = '/camp-' + val.replace(/\s/g, '-') + '.html';
             $('#url').val(url);
         });
+
         $('[name=title]').trigger('keyup');
     });
 </script>

@@ -1,7 +1,7 @@
 <?php
 function menu($header = true)
 {
-    $menus = table_fetch_rows('page', 'top_nav = 1 and status=1');
+    $menus = table_fetch_rows('page', 'top_nav = 1 and status=1','position asc');
     if (false != $menus) {
         __('ul', false, 'nav navbar-nav');
         foreach ($menus as $menu) {

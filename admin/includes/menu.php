@@ -72,23 +72,6 @@
                 ),
         ),
         array(
-            'module' => 'events',
-            'title' => 'Events',
-            'submenu' =>
-                array(
-                    0 =>
-                        array(
-                            'action' => 'form',
-                            'title' => 'Add',
-                        ),
-                    1 =>
-                        array(
-                            'action' => 'list',
-                            'title' => 'Overview',
-                        ),
-                ),
-        ),
-        array(
             'module' => 'camps',
             'title' => 'Camps',
             'submenu' =>
@@ -102,6 +85,11 @@
                         array(
                             'action' => 'list',
                             'title' => 'Overview',
+                        ),
+                    2 =>
+                        array(
+                            'action' => 'registrations',
+                            'title' => 'Registrations',
                         ),
                 ),
         ),

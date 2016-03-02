@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/includes/layout/normal.php';
 
 //fetch any page contents
 //this has been placed on top, so that only the contents of this particular page can
-//be taken. Useful in AJAX requests.
+//be taken. Useful in AJAX requests to this particular page.
 ob_start();
 require_once dirname(__FILE__) . '/includes/layout/pages/'.$include.'.php';
 $out = ob_get_contents();
@@ -23,14 +23,12 @@ __('body');
             require_once dirname(__FILE__) . '/includes/template/header.php';
         __('/section');
         __('section','main2');
-            require_once dirname(__FILE__) . '/includes/template/topbanner.php';
-            /*if($url == '/home.html'){
+            if($url == '/home.html'){
+                require_once dirname(__FILE__) . '/includes/template/topbanner.php';
             } elseif($banner == true){
                 require_once dirname(__FILE__) . '/includes/template/page-banner.php';
-            }*/
-            __('div',false,'container');
-            _e($out);
-            __('/div');
+            }
+            _t('div',$out,array('class'=>'container'));
         __('/section');
         __('section','main3');
             require_once dirname(__FILE__) . '/includes/template/footer.php';

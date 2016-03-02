@@ -3,6 +3,8 @@
  * Routing page
  */
 $banner = false;
+$styles = array();
+$scripts = array();
 
 //Route by url
 switch ($url) {
@@ -20,11 +22,15 @@ switch ($url) {
     case '/kids-camps.html':
     case '/triathlons.html':
     case '/trampolining.html':
+    case '/swim-school.html':
+    case '/cheerleading.html':
         $banner = true;
         $include = 'camps';
         break;
     case '/events.html':
         $include = 'events';
+        $styles = array('fullcalendar.min.css', 'fullcalendar.print.css');
+        $scripts = array('moment.min.js', 'fullcalendar.min.js');
         break;
     case '/news.html':
         $include = 'news';
@@ -52,3 +58,4 @@ switch ($rewriteData['table_name']) {
         $include = 'news-details';
         break;
 }
+$title = isset($pageData['title']) ? $pageData['title'] : (isset($pageData['page_title']) ? $pageData['page_title'] : Site::application());

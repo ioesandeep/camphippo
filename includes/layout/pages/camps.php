@@ -1,10 +1,12 @@
 <?php
-$types = array('lifeguarding', 'kids camps', 'triathlons', 'trampolining');
+$types = array('lifeguarding', 'kids camps', 'triathlons', 'trampolining', 'swim school', 'cheerleading');
 $type = array_search(strtolower($pageData['page_title']), $types);
 if (false !== $type) {
     $type = $type + 1;
 }
-$camps = table_fetch_rows('camps', sprintf('type="%d" and DATE_FORMAT(start_date,"%%m") = "%s"', $type, date('m')), 'start_date asc,id asc', 0, 4);
+
+$camps = table_fetch_rows('camps', sprintf('type="%d" and DATE_FORMAT(start_date,"%%m") >= "%s"', $type, date('m')), 'start_date asc,id asc', 0, 4);
+
 ?>
 <div class="row">
     <div id="lifeguard-container">
@@ -20,20 +22,23 @@ $camps = table_fetch_rows('camps', sprintf('type="%d" and DATE_FORMAT(start_date
         <?php if (false != $camps) {
             __('div', false, 'col-md-12 col-sm-12 col-xs-12');
             __('div', false, 'calendar-module-container');
-            _t('h2', Lang::month_dates());
+            _t('h2', Lang::upcoming_events());
             foreach ($camps as $camp) {
+                $day = date('d',strtotime($camp['start_date']));
                 if (date('m', strtotime($camp['start_date'])) == date('m', strtotime($camp['end_date']))) {
                     $day = date('d', strtotime($camp['start_date'])) . '-' . date('d', strtotime($camp['end_date']));
                 }
                 __('div', false, 'cal-module-row');
                     __('div', false, 'cal-module-left');
-                        _t('span', strtoupper(date('M')), array('class' => 'month'));
+                        _t('span', strtoupper(date('M',strtotime($camp['start_date']))), array('class' => 'month'));
                         _t('span', $day, array('class' => 'day'));
                     __('/div');
                     __('div', false, 'cal-module-mid');
                         _t('span', $camp['title'], array('class' => 'title'));
                         _t('span', Lang::venue(). ' '. $camp['venue']);
-                        _t('span', Lang::time(). ' '. $camp['start_time']);
+                        if(!empty($camp['start_time'])) {
+                            _t('span', Lang::time() . ' ' . $camp['start_time']);
+                        }
                     __('/div');
                     __('div', false, 'cal-module-right');
                         __('a','full-details','text-icon-block small-full-details',array('href'=>getRewriteUrl('camps',$camp['id'])));

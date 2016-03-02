@@ -55,5 +55,8 @@ return array(
     'camp_reg' => 'Camp registration',
     'complete_reg' => 'Complete registration',
     'no_token' => 'Please obtain a valid token to complete payment.',
-    'click_here' => 'Click me! to return to home page.'
+    'click_here' => 'Click me! to return to home page.',
+    'upcoming_events'   => 'Upcoming events',
+    'course_info'   => 'Download course information',
+    'view_full'   => 'View full details'
 );

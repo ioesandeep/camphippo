@@ -2,13 +2,20 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 date_default_timezone_set('Europe/London');
-require_once("admin/application.php");
 
 define('LAYOUT_PATH', dirname(__FILE__) . '/layout');
 define('TEMPLATE_PATH', dirname(__FILE__) . '/template');
-define('ENV', 'production');
+define('ENV', 'development');
 
+require_once("admin/application.php");
 
+/***
+ * This function is complete mess. Fix it!
+ * @param $content
+ * @param int $paragraph_number
+ * @param bool $skip
+ * @return bool|mixed|string
+ */
 function get_paragraphed_content($content, $paragraph_number = 0, $skip = false)
 {
     if ($paragraph_number == 0) {
@@ -21,6 +28,10 @@ function get_paragraphed_content($content, $paragraph_number = 0, $skip = false)
         $paragraphs = explode('\n', $content);
     } elseif (strpos($content, '<br/>')) {
         $paragraphs = explode('<br/>', $content);
+    } elseif (strpos($content, '.')) {
+        $paragraphs = explode('.', $content);
+    } else {
+        return $content;
     }
 
     if ($skip == true) {
@@ -32,12 +43,25 @@ function get_paragraphed_content($content, $paragraph_number = 0, $skip = false)
         return sprintf('<p>%s</p>', implode('</p><p>', $paragraphs));
     }
 
-    if (!isset($paragraphs[$paragraph_number - 1])) {
-        return false;
+    if (is_array($paragraph_number)) {
+        if (count($paragraph_number) == 2) {
+            $from = $paragraph_number[0];
+            $to = $paragraph_number[1];
+        } else {
+            $from = $paragraph_number[0];
+            $to = $from + 1;
+        }
+        $new = array_chunk($paragraphs, $to - $from + 1);
+        if (isset($new[$from - 1])) {
+            return implode("\n", $new[$from - 1]);
+        }
+        return implode("\n", $paragraphs);
+    } else {
+        if (!isset($paragraphs[$paragraph_number - 1])) {
+            return false;
+        }
+        return isset($remove) ? str_replace($remove, '', $paragraphs[$paragraph_number - 1]) : $paragraphs[$paragraph_number - 1];
     }
-
-    return isset($remove) ? str_replace($remove, '',
-        $paragraphs[$paragraph_number - 1]) : $paragraphs[$paragraph_number - 1];
 }
 
 
@@ -103,13 +127,13 @@ function __($tag, $id = false, $class = false, $attrs = array())
     if ($id != false) {
         $out .= sprintf(' id="%s"', $id);
     }
-    if (in_array($tag, array('img', 'input', 'br'))) {
+    if (in_array($tag, array('img', 'input', 'br', 'link', 'meta'))) {
         $out .= '/';
     }
     $out = rtrim($out, ' ');
     $out .= '>';
 
-    return _e($out);
+    _e($out);
 }
 
 /**
