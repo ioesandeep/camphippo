@@ -8,7 +8,10 @@ if (isset($_POST['signup'])) {
     try {
         $post = $_POST;
         $required = Lang::signup_form();
-
+        $camp = table_fetch_row('camps', sprintf('id="%d"', $_GET['camp']));
+        if (false == $camp) {
+            throw new Exception(Lang::no_camp());
+        }
         if (!isset($post['name'])) {
             throw new Exception($required['name']);
         }
@@ -30,11 +33,15 @@ if (isset($_POST['signup'])) {
         if (!isset($post['year_group'])) {
             throw new Exception($required['year_group']);
         }
-        if (!table_insert('camp_registration', array('name','wished_name', 'email', 'mobile', 'landline', 'address', 'school', 'year_group', 'camp'), $post)) {
+        if (!table_insert('camp_registration', array('name', 'wished_name', 'email', 'mobile', 'landline', 'address', 'school', 'year_group', 'camp'), $post)) {
             throw new Exception(Lang::save_error());
         }
         $_SESSION['message'] = Lang::reg_success();
-        header('Location:/payment.html?reg-id=' . db_insert_id());
+        if ($camp['enable_consent_form'] == 1) {
+            header('Location:/parental-consent.html?reg-id=' . db_insert_id());
+        } else {
+            header('Location:/payment.html?reg-id=' . db_insert_id());
+        }
     } catch (Exception $e) {
         echo show_messages(array($e->getMessage()));
     }

@@ -71,10 +71,12 @@ if (!empty($video)) {
                 if (empty($image)) {
                     $image = '/public/img/hippo/life-guard-hippo.png';
                 }
-                $signup_url = sprintf('/signup.html?camp=%d', $pageData['id']);
+                $signup_url = !empty($pageData['signup_url']) ? $pageData['signup_url'] : sprintf('/signup.html?camp=%d', $pageData['id']);
+                $lang = 'sign_up_' . str_replace(' ', '_', strtolower($type['h1_title']));
+                $lang = Lang::$lang() == false ? Lang::sign_up() : Lang::$lang();
                 _e($pageData['description']);
                 __('a', 'signup-course', 'text-icon-block', array('href' => $signup_url));
-                _t('span', Lang::sign_up());
+                _t('span', $lang);
                 __('img', false, false, array('src' => $image));
                 __('/a');
                 ?>
@@ -99,6 +101,11 @@ if (!empty($video)) {
                 _t('span', Lang::course_info());
                 __('img', false, false, array('src' => '/public/img/icons/download.png'));
                 __('/a');
+            }
+
+            if (!empty($pageData['extra_info'])) {
+                _t('h3',Lang::extra_info());
+                _e($pageData['extra_info']);
             }
             ?>
         </div>

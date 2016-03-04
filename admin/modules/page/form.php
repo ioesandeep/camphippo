@@ -8,8 +8,9 @@ $messages = array();
 $table_id = get_id();
 
 if (isset($_POST['save'])) {
-    $fields = array('blocks', 'parent_id', 'menu_title', 'page_title', 'h1_title', 'content', 'meta_keywords', 'meta_description', 'target', 'status', 'top_nav', 'footer_nav');
-
+    $fields = array('blocks', 'parent_id', 'menu_title', 'page_title', 'h1_title', 'content', 'meta_keywords', 'meta_description', 'status', 'top_nav', 'footer_nav');
+    $_POST['top_nav'] = isset($_POST['top_nav']) ? 1 : 0;
+    $_POST['footer_nav'] = isset($_POST['footer_nav']) ? 1 : 0;
     if (isset($_POST['blocks'])) {
         $_POST['blocks'] = implode(',', $_POST['blocks']);
     } else {

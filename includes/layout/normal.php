@@ -5,6 +5,7 @@
 $banner = false;
 $styles = array();
 $scripts = array();
+$title = isset($pageData['title']) ? $pageData['title'] : (isset($pageData['page_title']) ? $pageData['page_title'] : Site::application());
 
 //Route by url
 switch ($url) {
@@ -38,6 +39,11 @@ switch ($url) {
     case '/signup.html':
         $include = 'signup';
         break;
+    case '/parental-consent-form.html':
+    case '/parental-consent.html':
+        $include = 'consent-form';
+        $scripts = array('jSignature.js');
+        break;
     case '/payment.html':
         $include = 'payment';
         break;
@@ -58,4 +64,3 @@ switch ($rewriteData['table_name']) {
         $include = 'news-details';
         break;
 }
-$title = isset($pageData['title']) ? $pageData['title'] : (isset($pageData['page_title']) ? $pageData['page_title'] : Site::application());

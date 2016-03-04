@@ -101,11 +101,11 @@ $e_formatted = array_map(function ($event) use ($colors) {
                     _t('h4', $event['title'], array('id' => "title"));
                     _t('span', Lang::date() . ' ' . date('d F Y', strtotime($event['start_date'])), array('id' => "date"));
                     _t('span', Lang::venue() . ' ' . $event['venue'], array('id' => "venue"));
-                    _t('span', Lang::time() . ' ' . $event['start_time'], array('id' => "time"));
+                    _t('span', !empty($event['start_time']) ? Lang::time() . ' ' . $event['start_time'] : null, array('id' => "time"));
                     ?>
                 </hgroup>
                 <?php _t('div', strlen($event['description']) < 400 ? $event['description'] : get_paragraphed_content($event['description'], array(1, 8)), array('id' => "description")); ?>
-            </div><!-- #event-side-container -->
+            </div>
             <a href="<?php _e(getRewriteUrl('camps', $event['id'])); ?>" id="full-details" class="text-icon-block">
                 <?php _t('span',Lang::view_full());?>
                 <img src="/public/img/icons/arrow.png" alt=""/>

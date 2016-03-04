@@ -2,7 +2,7 @@
 $id = get_id();
 $messages = array();
 if (!empty($_POST)) {
-    $fields = array('title', 'type', 'venue', 'start_date', 'start_time', 'end_date', 'end_time', 'description', 'price', 'video_url');
+    $fields = array('title', 'type', 'venue', 'start_date', 'start_time', 'end_date', 'end_time', 'description', 'price', 'video_url','extra_info','signup_url');
 
     @list($d, $m, $y) = explode('/', $_POST['start_date']);
     $_POST['start_date'] = date('Y-m-d',strtotime(sprintf('%d-%d-%d', $y, $m, $d)));
@@ -130,6 +130,12 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
             </td>
         </tr>
         <tr>
+            <td>Signup URL</td>
+            <td>
+                <input type="text" name="signup_url" placeholder="Camp signup url" value="<?php echo isset($data['signup_url']) ? htmlentities($data['signup_url']) : null; ?>"/>
+            </td>
+        </tr>
+        <tr>
             <td>
                 or, Upload video<br/>
                 <small>Only mp4 files are supported.</small>
@@ -182,6 +188,13 @@ $data = table_fetch_row('camps', sprintf('id="%d"', $id));
                 <?php show_fckeditor('description', isset($data['description']) ? $data['description'] : null); ?>
             </td>
         </tr>
+        <tr valign="top">
+            <td>Additional information</td>
+            <td>
+                <?php show_fckeditor('extra_info', isset($data['extra_info']) ? $data['extra_info'] : null); ?>
+            </td>
+        </tr>
+
         <tr>
             <td></td>
             <td>
