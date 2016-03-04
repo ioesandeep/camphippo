@@ -44,6 +44,10 @@ switch ($url) {
         $include = 'consent-form';
         $scripts = array('jSignature.js');
         break;
+    case '/enrollment-form.html':
+        $include = 'enrollment-form';
+        $scripts = array('jSignature.js');
+        break;
     case '/payment.html':
         $include = 'payment';
         break;
@@ -62,5 +66,6 @@ switch ($rewriteData['table_name']) {
         break;
     case 'news':
         $include = 'news-details';
+        $banner = false;
         break;
 }

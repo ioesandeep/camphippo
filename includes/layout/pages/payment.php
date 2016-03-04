@@ -1,4 +1,5 @@
 <?php
+require_once BASEDIR . '/vendor/autoload.php';
 if (!empty($_POST)) {
     try {
         if (!isset($_POST['token'])) {
@@ -15,7 +16,17 @@ if (!empty($_POST)) {
         if (false == $camp) {
             throw new Exception(Lang::no_camp());
         }
+
+        //confirm payment
+        \Stripe\Stripe::setApiKey("sk_live_QmcKfzzVJvyoDsMngzDA82J0");
         $token = $_POST['token'];
+        $charge = \Stripe\Charge::create(array(
+            "amount" => $camp['price'] * 100,
+            "currency" => "gbp",
+            "source" => $token['id'],
+            "description" => Lang::camp_reg()
+        ));
+
         $data = array(
             'security_method' => 'token',
             'security_id' => $token['id'],
@@ -133,15 +144,14 @@ if (!empty($_POST)) {
         <?php
         $email = ob_get_contents();
         ob_end_clean();
-        $to = 'tom@wdymail.co.uk';
-        send_html_email($to, 'Tom Beachell', Site::email(), Site::application(), Lang::new_registration(), $email);
-
+        $to = sprintf('%s,%s', Site::jan_email(), Site::gary_email());
+        send_html_email($to, 'Jan &amp; Gary', Site::email(), Site::application(), Lang::new_registration(), $email);
         ob_start();
         ?>
         <html>
         <head></head>
         <body>
-        <?php _t('h3', Lang::dear() . ' ' . $user['name']); ?><br/><br/>
+        <?php _t('h3', Lang::dear() . ' ' . $user['contact_name']); ?><br/><br/>
         <p>We have received your booking information and payment of &pound; <?php _e($camp['price']); ?>
             for <?php _e($camp['title']); ?> on <?php _e(date('d-m-Y', strtotime($camp['start_date']))); ?></p>
         <p>Please see the course details below:</p>
@@ -154,7 +164,7 @@ if (!empty($_POST)) {
         <?php
         $email = ob_get_contents();
         ob_end_clean();
-        $e = 'tom@wdymail.co.uk';//$token['email']
+        $e = $token['email'];
         send_html_email($e, $user['name'], Site::email(), Site::application(), Lang::booking_complete(), $email);
 
         echo json_encode(array('code' => 200, 'message' => Lang::reg_complete()));
@@ -179,58 +189,60 @@ if (false == $camp) {
 ?>
 
 <div class="row">
-    <div class="col-md-9 col-sm-9 col-xs-12">
-        <?php
-        if (isset($_SESSION['message'])) {
-            _t('h2', $_SESSION['message']);
-        }
-        _e($pageData['content']);
-        ?>
+    <div id="default-content-container">
+        <div class="col-md-9 col-sm-9 col-xs-12">
+            <?php
+            if (isset($_SESSION['message'])) {
+                _t('h2', $_SESSION['message']);
+            }
+            _e($pageData['content']);
+            ?>
 
 
-        <script src="https://checkout.stripe.com/checkout.js"></script>
-        <button id="customButton" class="red-btn"><?php _e(Lang::complete_reg()); ?></button>
-        <h2 id="server-response"></h2>
-        <script>
-            var handler = StripeCheckout.configure({
-                key: 'pk_test_yT7Qck0gapSbjZZyyhzBobtZ',
-                image: '/public/img/footer-logo.png',
-                locale: 'auto',
-                token: function (token) {
-                    $.ajax({
-                        url: '/payment.html',
-                        type: 'POST',
-                        data: {token: token, user:<?php _e($_GET['reg-id']);?>},
-                        dataType: 'json',
-                        success: function (res) {
-                            var res_cont = $('#server-response');
-                            res_cont.html(res.message);
-                            if (res.code == 200) {
-                                setTimeout(function () {
-                                    res_cont.html('<?php _t('a', Lang::click_here(), array('href' => '/'));?>');
+            <script src="https://checkout.stripe.com/checkout.js"></script>
+            <button id="customButton" class="red-btn"><?php _e(Lang::complete_reg()); ?></button>
+            <h2 id="server-response"></h2>
+            <script>
+                var handler = StripeCheckout.configure({
+                    key: 'pk_live_l8FVPBTXFF27Tvt3dsr6AFlR',
+                    image: '/public/img/footer-logo.png',
+                    locale: 'auto',
+                    token: function (token) {
+                        $.ajax({
+                            url: '/payment.html',
+                            type: 'POST',
+                            data: {token: token, user:<?php _e($_GET['reg-id']);?>},
+                            dataType: 'json',
+                            success: function (res) {
+                                var res_cont = $('#server-response');
+                                res_cont.html(res.message);
+                                if (res.code == 200) {
                                     setTimeout(function () {
-                                        location.href = '/';
+                                        res_cont.html('<?php _t('a', Lang::click_here(), array('href' => '/'));?>');
+                                        setTimeout(function () {
+                                            location.href = '/';
+                                        }, 4000);
                                     }, 4000);
-                                }, 4000);
+                                }
                             }
-                        }
-                    })
-                }
-            });
-            $(function () {
-                $('#customButton').on('click', function (e) {
-                    handler.open({
-                        name: '<?php _e(Site::application());?>',
-                        description: '<?php _e(Lang::camp_reg());?>',
-                        currency: "gbp",
-                        amount: <?php echo doubleval(100 * $camp['price']);?>
+                        })
+                    }
+                });
+                $(function () {
+                    $('#customButton').on('click', function (e) {
+                        handler.open({
+                            name: '<?php _e(Site::application());?>',
+                            description: '<?php _e(Lang::camp_reg());?>',
+                            currency: "gbp",
+                            amount: <?php echo doubleval(100 * $camp['price']);?>
+                        });
+                        e.preventDefault();
                     });
-                    e.preventDefault();
+                    $(window).on('popstate', function () {
+                        handler.close();
+                    });
                 });
-                $(window).on('popstate', function () {
-                    handler.close();
-                });
-            });
-        </script>
+            </script>
+        </div>
     </div>
 </div>

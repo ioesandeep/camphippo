@@ -10,6 +10,7 @@ return array (
   'booking_confirmed' => 'Booking confirmed.',
   'booking_id' => 'Booking ID',
 
+  'c_contact_name'  => 'Contact name',
   'c_dob' => 'Date of Birth of Child',
   'c_email' => 'Email',
   'c_landline' => 'Landline number',
@@ -59,6 +60,7 @@ return array (
   'reg_complete' => 'Your registration has completed successfully. Thank you for choosing Camp Hippo.',
   'reg_success' => 'Registered successfully. Please complete the payment to complete the registration process.',
   'registration_date' => 'Registration date',
+  'req_req' => 'Please check the course pre requisites checkboxes.',
 
   's_email' => 'Your email',
   's_name' => 'Your name',

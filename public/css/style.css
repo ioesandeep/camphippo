@@ -1092,7 +1092,9 @@ h6,
     position: absolute;
     bottom: 0;
 }
-#signature_2{
+#signature_2,
+#signature_candidate_2,
+#signature_guardian_2{
     visibility: hidden;
     height: 0;
 }

@@ -1,2 +1,6 @@
 /.idea
 /.git
+/vendor
+/uploads
+/composer.lock
+/.gitignore

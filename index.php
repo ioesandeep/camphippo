@@ -1,4 +1,6 @@
 <?php
+define('BASEDIR',dirname(__FILE__));
+
 require_once dirname(__FILE__) . '/includes/initialize.php';
 require_once dirname(__FILE__) . '/includes/layout/normal.php';
 

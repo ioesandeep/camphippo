@@ -4,18 +4,22 @@ if (!isset($_GET['reg-id'])) {
     return;
 }
 
-$user = table_fetch_row('camp_registration',sprintf('id="%d"',$_REQUEST['reg-id']));
-if(false == $user){
+$user = table_fetch_row('camp_registration', sprintf('id="%d"', $_REQUEST['reg-id']));
+if (false == $user) {
     header('Location:/');
     return;
 }
-
+$camp = table_fetch_row('camps', sprintf('id="%d"', $user['camp']));
+if (false == $camp || $camp['type'] == 1) {
+    header('Location:/');
+    return;
+}
 if (isset($_POST['consent'])) {
     try {
         /**
          * TODO: Data validation
          */
-        
+
         //save medication information
         if (!table_insert('child_medication', array_keys($_POST['medical']), $_POST['medical'])) {
             throw new Exception(Lang::save_error());
@@ -28,11 +32,22 @@ if (isset($_POST['consent'])) {
         }
         $_POST['contact_id'] = db_insert_id();
 
-        $fields = array('user_id', 'medication_id', 'contact_id', 'signed_date', 'signature');
+        $fields = array('user_id', 'medication_id', 'contact_id', 'signed_date', 'signature', 'can_swim');
         //finally save the consent form
         if (!table_insert('consent_data', $fields, $_POST)) {
             throw new Exception(Lang::save_error());
         }
+        ob_start();
+        ?>
+        <table>
+            <caption>1. Parental Consent:</caption>
+            <tr></tr>
+        </table>
+        <?php
+        $out = ob_get_contents();
+        ob_end_clean();
+        $to = 'tom@wdymail.co.uk';
+        send_html_email($to, 'Tom Beachell', Site::email(), Site::application(), Lang::new_registration(), $email);
         //redirect to payment page
         header('Location:/payment.html?reg-id=' . $_POST['user_id']);
     } catch (Exception $e) {
@@ -53,7 +68,7 @@ if (isset($_POST['consent'])) {
                     <fieldset>
                         <legend><h3>1. Parental Consent:</h3></legend>
                         <p>I give permission for my son/daughter/ward to participate in the Camp Hippo Swim School:
-                        <p>Monday 25th July to Friday 29th July 2016</p>
+                        <p><?php _e(date('L dS F',strtotime($camp['start_date'])));?> to <?php _e(date('L dS F Y',strtotime($camp['start_date'])));?></p>
                         <p>He/she is physically able to carry out the activities mentioned in the programme.</p>
                     </fieldset>
                     <fieldset>
@@ -154,8 +169,8 @@ if (isset($_POST['consent'])) {
                     <fieldset>
                         <legend><h3>3. Swimming ability:</h3></legend>
                         <p>I certify that my son/ward/daughter is</p>
-                        <p>* able to swim a short distance only.</p>
-                        <p>* unable to swim.</p>
+                        <p>able to swim a short distance only. <input type="radio" name="can_swim" value="1"/></p>
+                        <p>unable to swim. <input type="radio" name="can_swim" value="0"/></p>
                         <br/>
                         <p>(* Delete or annotate relevant wording)</p>
                     </fieldset>
@@ -164,15 +179,15 @@ if (isset($_POST['consent'])) {
                         <p>Please complete the information boxes below so that I can contact you regarding your
                             son/daughter/ward if necessary whilst the camp is in operation.</p>
                         <input type="text" id="" name="contact[child_name]" placeholder="Name of child"
-                               class="form-control" value="<?php echo $user['name'];?>"/>
+                               class="form-control" value="<?php echo $user['name']; ?>"/>
                         <input type="text" id="" name="contact[person_name]" placeholder="Name of person of contact"
                                class="form-control"/>
                         <input type="text" id="" name="contact[phone_1]" placeholder="Phone number"
-                               class="form-control" value="<?php echo $user['mobile'];?>"/>
+                               class="form-control" value="<?php echo $user['mobile']; ?>"/>
                         <input type="text" id="" name="contact[alt_contact]" placeholder="Alternative contact"
-                               class="form-control" value="<?php echo $user['email'];?>"/>
+                               class="form-control" value="<?php echo $user['email']; ?>"/>
                         <input type="text" id="" name="contact[phone_2]" placeholder="Phone number"
-                               class="form-control" value="<?php echo $user['landline'];?>"/>
+                               class="form-control" value="<?php echo $user['landline']; ?>"/>
                     </fieldset>
                     <div class="form-group">
                         <div class="col-md-5 no-padding" id="date-container">

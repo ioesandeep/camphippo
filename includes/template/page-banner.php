@@ -1,4 +1,7 @@
 <?php
+if (false == $banner) {
+    return;
+}
 $path = $rewriteData['table_name'] . '/' . $rewriteData['table_id'];
 $banner_image = get_image($path);
 if (empty($banner_image)) {
