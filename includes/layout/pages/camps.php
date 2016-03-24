@@ -12,8 +12,16 @@ $camps = table_fetch_rows('camps', sprintf('type="%d" and DATE_FORMAT(start_date
     <div id="lifeguard-container">
         <div class="col-md-9 col-sm-9 col-xs-12">
             <?php
+            $subscribe_url = '/course-subscription.html';
             _t('h1', ucwords($pageData['h1_title']));
             _e($pageData['content']);
+            if($url == '/trampolining.html') {
+                __('p');
+                    __('a', 'signup-course', 'text-icon-block', array('href' => $subscribe_url));
+                        _t('span', Lang::subscribe_tramp(),array('style'=>'width:auto;'));
+                    __('/a');
+                __('/p');
+            }
             ?>
         </div>
         <div class="col-md-3 col-sm-3 col-xs-12">

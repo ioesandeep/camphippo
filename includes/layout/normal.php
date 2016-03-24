@@ -51,6 +51,12 @@ switch ($url) {
     case '/payment.html':
         $include = 'payment';
         break;
+    case '/course-subscription.html':
+        $include = 'subscribe';
+        break;
+    case '/subscription-payment.html':
+        $include = 'subscription-payment';
+        break;
     default:
         $banner = true;
         $include = 'details';

@@ -16,7 +16,7 @@ if (false == $news) {
                             $img = "/public/img/dummy-small.jpg";
                         }
                         __('div', false, 'col-md-6 col-xs-12 news-col');
-                        __('img', false, false, array('src' => $img));
+                        __('img', false, 'news-image', array('src' => $img));
                         _t('h3',$n['title']);
                         _t('span', date('F d, Y', strtotime($n['news_date'])));
                         _t('p', get_sentence($n['content'], 3));

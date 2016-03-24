@@ -14,7 +14,7 @@
 			$where = sprintf('id=%d', $_SESSION['admin']['id']);			
 			
 			table_update(TBL_ADMIN, $fields, $values, $where);
-			redirect('control-panel.php');
+			redirect('control-panel.php?module=admin&action=list');
 		} else {
 			$messages[] = 'Invalid login, incorrect email or password specified.';
 		}

@@ -1,16 +1,22 @@
 <?php
-if (!isset($_GET['reg-id'])) {
+//this variable is used to skip the step for fetching camp details.
+//useful for subscriptions; since subscription is independent of camp details.
+$skip_camp = false;
+if (isset($_GET['reg-id'])) {
+    $user = table_fetch_row('camp_registration', sprintf('id="%d"', $_REQUEST['reg-id']));
+} elseif (isset($_GET['sub-id'])) {
+    $skip_camp = true;
+    $user = table_fetch_row('camp_subscriptions', sprintf('id="%d"', $_REQUEST['sub-id']));
+} else {
     header('Location:/');
     return;
 }
-
-$user = table_fetch_row('camp_registration', sprintf('id="%d"', $_REQUEST['reg-id']));
 if (false == $user) {
     header('Location:/');
     return;
 }
 $camp = table_fetch_row('camps', sprintf('id="%d"', $user['camp']));
-if (false == $camp || $camp['type'] == 1) {
+if ((false == $camp || $camp['type'] == 1) && !$skip_camp) {
     header('Location:/');
     return;
 }
@@ -47,9 +53,13 @@ if (isset($_POST['consent'])) {
         $out = ob_get_contents();
         ob_end_clean();
         $to = 'tom@wdymail.co.uk';
-        send_html_email($to, 'Tom Beachell', Site::email(), Site::application(), Lang::new_registration(), $email);
+        //send_html_email($to, 'Tom Beachell', Site::email(), Site::application(), Lang::new_registration(), $email);
         //redirect to payment page
-        header('Location:/payment.html?reg-id=' . $_POST['user_id']);
+        if (isset($_GET['sub-id'])) {
+            header('Location:/subscription-payment.html?sub-id=' . $_POST['user_id']);
+        } else {
+            header('Location:/payment.html?reg-id=' . $_POST['user_id']);
+        }
     } catch (Exception $e) {
         $message = $e->getMessage();
     }
@@ -59,7 +69,9 @@ if (isset($_POST['consent'])) {
     <div id="default-content-container">
         <div class="col-md-9 col-sm-9 col-xs-12">
             <form action="" class="contactForm" method="post">
-                <input type="hidden" name="user_id" value="<?php _e(intval($_GET['reg-id'])); ?>">
+                <input type="hidden" name="consent_type"
+                       value="<?php echo isset($_GET['reg-id']) ? 'registration' : 'subscription'; ?>"/>
+                <input type="hidden" name="user_id" value="<?php _e(intval($user['id'])); ?>">
                 <div id="form-container">
                     <?php
                     if (isset($message)) {
@@ -67,8 +79,15 @@ if (isset($_POST['consent'])) {
                     } ?>
                     <fieldset>
                         <legend><h3>1. Parental Consent:</h3></legend>
-                        <p>I give permission for my son/daughter/ward to participate in the Camp Hippo Swim School:
-                        <p><?php _e(date('L dS F',strtotime($camp['start_date'])));?> to <?php _e(date('L dS F Y',strtotime($camp['start_date'])));?></p>
+                        <p>I give permission for my son/daughter/ward to participate in the Camp
+                            Hippo
+                            <?php
+                            if (!$skip_camp){
+                            echo $camp['title'];
+                            ?>:
+                        <p><?php _e(date('dS F', strtotime($camp['start_date']))); ?>
+                            to <?php _e(date('dS F Y', strtotime($camp['start_date']))); ?></p>
+                        <?php } ?>
                         <p>He/she is physically able to carry out the activities mentioned in the programme.</p>
                     </fieldset>
                     <fieldset>
@@ -179,15 +198,18 @@ if (isset($_POST['consent'])) {
                         <p>Please complete the information boxes below so that I can contact you regarding your
                             son/daughter/ward if necessary whilst the camp is in operation.</p>
                         <input type="text" id="" name="contact[child_name]" placeholder="Name of child"
-                               class="form-control" value="<?php echo $user['name']; ?>"/>
+                               class="form-control" value="<?php echo isset($user['name']) ? $user['name'] : null; ?>"/>
                         <input type="text" id="" name="contact[person_name]" placeholder="Name of person of contact"
                                class="form-control"/>
                         <input type="text" id="" name="contact[phone_1]" placeholder="Phone number"
-                               class="form-control" value="<?php echo $user['mobile']; ?>"/>
+                               class="form-control"
+                               value="<?php echo isset($user['mobile']) ? $user['mobile'] : null; ?>"/>
                         <input type="text" id="" name="contact[alt_contact]" placeholder="Alternative contact"
-                               class="form-control" value="<?php echo $user['email']; ?>"/>
+                               class="form-control"
+                               value="<?php echo isset($user['email']) ? $user['email'] : null; ?>"/>
                         <input type="text" id="" name="contact[phone_2]" placeholder="Phone number"
-                               class="form-control" value="<?php echo $user['landline']; ?>"/>
+                               class="form-control"
+                               value="<?php echo isset($user['landline']) ? $user['landline'] : null; ?>"/>
                     </fieldset>
                     <div class="form-group">
                         <div class="col-md-5 no-padding" id="date-container">

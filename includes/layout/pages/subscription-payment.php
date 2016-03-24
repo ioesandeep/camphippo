@@ -8,40 +8,42 @@ if (!empty($_POST)) {
         if (!isset($_POST['user'])) {
             throw new Exception(Lang::no_user());
         }
-        $user = table_fetch_row('camp_registration', sprintf('id="%d"', $_POST['user']));
+        $user = table_fetch_row('camp_subscriptions', sprintf('id="%d"', $_POST['user']));
         if (false == $user) {
             throw new Exception(Lang::no_user());
-        }
-        $camp = table_fetch_row('camps', sprintf('id="%d"', $user['camp']));
-        if (false == $camp) {
-            throw new Exception(Lang::no_camp());
         }
 
         //confirm payment
         \Stripe\Stripe::setApiKey("sk_live_QmcKfzzVJvyoDsMngzDA82J0");
         $token = $_POST['token'];
         $charge = \Stripe\Charge::create(array(
-            "amount" => $camp['price'] * 100,
+            "amount" => $user['cost'] * 100,
             "currency" => "gbp",
             "source" => $token['id'],
-            "description" => Lang::camp_reg()
+            "description" => Lang::camp_sub()
         ));
 
         $data = array(
             'security_method' => 'token',
             'security_id' => $token['id'],
-            'price' => $camp['price'],
+            'price' => $user['cost'],
             'user' => $user['id'],
             'client_ip' => $token['client_ip'],
             'email' => $token['email'],
             'payment_type' => $token['type'],
             'payment_date' => date('Y-m-d H:i:s', $token['created']),
-            'user_type' => 'registration'
+            'user_type' => 'subscription'
         );
         if (!table_insert('camp_payments', array_keys($data), $data)) {
             throw new Exception(Lang::save_error());
         }
         $booking_id = db_insert_id();
+
+        $terms = array(
+            11 => 'Jan-March 2017 ( 11Weeks)',
+            12 => 'April - July 2016 (12weeks)',
+            14 => 'Sept -Dec 2016 (14 weeks)'
+        );
 
         //send email here
         //1. Notify the admin
@@ -52,12 +54,12 @@ if (!empty($_POST)) {
         <head></head>
         <body>
         <?php
-        _t('h3', Lang::booking_confirmed());
+        _t('h3', Lang::subscription_confirmed());
         ?>
         <table>
             <tr>
                 <?php
-                _t('td', Lang::booking_id());
+                _t('td', Lang::subscription_id());
                 _t('td', $booking_id);
                 ?>
             </tr>
@@ -69,56 +71,26 @@ if (!empty($_POST)) {
             </tr>
             <tr>
                 <?php
-                _t('td', Lang::wished_name());
-                _t('td', $user['wished_name']);
+                _t('td', Lang::sessions());
+                _t('td', $user['sessions']);
+                ?>
+            </tr>
+            <tr>
+                <?php
+                _t('td', Lang::terms());
+                _t('td', isset($terms[$user['term']]) ? $terms[$user['term']] : Lang::unknown());
                 ?>
             </tr>
             <tr>
                 <?php
                 _t('td', Lang::email());
-                _t('td', $user['email']);
-                ?>
-            </tr>
-            <tr>
-                <?php
-                _t('td', Lang::address());
-                _t('td', $user['address']);
-                ?>
-            </tr>
-            <tr>
-                <?php
-                _t('td', Lang::mobile());
-                _t('td', $user['mobile']);
-                ?>
-            </tr>
-            <tr>
-                <?php
-                _t('td', Lang::landline());
-                _t('td', $user['landline']);
-                ?>
-            </tr>
-            <tr>
-                <?php
-                _t('td', Lang::school());
-                _t('td', $user['school']);
-                ?>
-            </tr>
-            <tr>
-                <?php
-                _t('td', Lang::year_group());
-                _t('td', $user['year_group']);
-                ?>
-            </tr>
-            <tr>
-                <?php
-                _t('td', Lang::sel_camp());
-                _t('td', $camp['title']);
+                _t('td', $token['email']);
                 ?>
             </tr>
             <tr>
                 <?php
                 _t('td', Lang::payment_amt());
-                _t('td', '&pound;' . $camp['price']);
+                _t('td', '&pound;' . $user['cost']);
                 ?>
             </tr>
             <tr>
@@ -135,7 +107,7 @@ if (!empty($_POST)) {
             </tr>
             <tr>
                 <?php
-                _t('td', Lang::registration_date());
+                _t('td', Lang::subscription_date());
                 _t('td', date('Y-m-d H:i:s', $token['created']));
                 ?>
             </tr>
@@ -146,18 +118,16 @@ if (!empty($_POST)) {
         $email = ob_get_contents();
         ob_end_clean();
         $to = sprintf('%s,%s', Site::jan_email(), Site::gary_email());
-        send_html_email($to, 'Jan &amp; Gary', Site::email(), Site::application(), Lang::new_registration(), $email);
+        send_html_email($to, 'Jan &amp; Gary', Site::email(), Site::application(), Lang::new_subscription(), $email);
         ob_start();
         ?>
         <html>
         <head></head>
         <body>
-        <?php _t('h3', Lang::dear() . ' ' . $user['contact_name']); ?><br/><br/>
-        <p>We have received your booking information and payment of &pound; <?php _e($camp['price']); ?>
-            for <?php _e($camp['title']); ?> on <?php _e(date('d-m-Y', strtotime($camp['start_date']))); ?></p>
-        <p>Your Booking id is : <?php _e($booking_id);?></p>
-        <p>Please see the course details below:</p>
-        <?php _e($camp['description']); ?>
+        <?php _t('h3', Lang::dear() . ' ' . $user['name']); ?><br/><br/>
+        <p>We have received your subscription information and payment of &pound; <?php _e($user['cost']); ?>
+            for Trampolining subscription.</p>
+        <p>Your Subscription id is : <?php _e($booking_id);?></p>
         <br/>
         <p>If you have any questions please contact us on <?php _e(Site::phone()); ?> or
             email <?php _e(Site::email()); ?></p>
@@ -175,17 +145,12 @@ if (!empty($_POST)) {
     }
     exit;
 }
-if (!isset($_GET['reg-id'])) {
+if (!isset($_GET['sub-id'])) {
     return;
 }
-$user = table_fetch_row('camp_registration', sprintf('id="%d"', $_GET['reg-id']));
+$user = table_fetch_row('camp_subscriptions', sprintf('id="%d"', $_GET['sub-id']));
 if (false == $user) {
     _e(Lang::no_user());
-    return;
-}
-$camp = table_fetch_row('camps', sprintf('id="%d"', $user['camp']));
-if (false == $camp) {
-    _e(Lang::no_camp());
     return;
 }
 ?>
@@ -199,10 +164,9 @@ if (false == $camp) {
             }
             _e($pageData['content']);
             ?>
-
-
             <script src="https://checkout.stripe.com/checkout.js"></script>
-            <button id="customButton" class="red-btn"><?php _e(Lang::complete_reg()); ?></button>
+            <p>Payment required: &pound;<?php echo $user['cost'];?></p>
+            <button id="customButton" class="red-btn"><?php _e(Lang::complete_sub()); ?></button>
             <h2 id="server-response"></h2>
             <script>
                 var handler = StripeCheckout.configure({
@@ -211,9 +175,9 @@ if (false == $camp) {
                     locale: 'auto',
                     token: function (token) {
                         $.ajax({
-                            url: '/payment.html',
+                            url: '/subscription-payment.html',
                             type: 'POST',
-                            data: {token: token, user:<?php _e($_GET['reg-id']);?>},
+                            data: {token: token, user:<?php _e($_GET['sub-id']);?>},
                             dataType: 'json',
                             success: function (res) {
                                 var res_cont = $('#server-response');
@@ -234,9 +198,9 @@ if (false == $camp) {
                     $('#customButton').on('click', function (e) {
                         handler.open({
                             name: '<?php _e(Site::application());?>',
-                            description: '<?php _e(Lang::camp_reg());?>',
+                            description: '<?php _e(Lang::camp_sub());?>',
                             currency: "gbp",
-                            amount: <?php echo doubleval(100 * $camp['price']);?>
+                            amount: <?php echo doubleval(100 * $user['cost']);?>
                         });
                         e.preventDefault();
                     });

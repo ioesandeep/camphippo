@@ -75,10 +75,12 @@ if (!empty($video)) {
                 $lang = 'sign_up_' . str_replace(' ', '_', strtolower($type['h1_title']));
                 $lang = Lang::$lang() == false ? Lang::sign_up() : Lang::$lang();
                 _e($pageData['description']);
-                __('a', 'signup-course', 'text-icon-block', array('href' => $signup_url));
-                _t('span', $lang);
-                __('img', false, false, array('src' => $image));
-                __('/a');
+                __('p');
+                    __('a', 'signup-course', 'text-icon-block', array('href' => $signup_url));
+                        _t('span', $lang);
+                        __('img', false, false, array('src' => $image));
+                    __('/a');
+                __('/p');
                 ?>
             </div><!-- lifeguard-article -->
         </div>
